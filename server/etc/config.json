@@ -1,0 +1,8 @@
+{
+    "serverPort": 3000,
+    "db":{
+        "name": "dictionary",
+        "host": "localhost",
+        "port": 21017
+    }
+}
