@@ -1,5 +1,6 @@
 import {JetView} from "webix-jet";
 import {wordGroups} from "../models/wordGroups";
+import WordsListView from "./wordsList";
 
 
 export default class WordGroupView extends JetView {
@@ -29,7 +30,13 @@ export default class WordGroupView extends JetView {
 			autoWidth: true,
 			rightSplit: 2,
 			minWidth: 650,
-			minHeight: 400
+			minHeight: 400,
+			select: true,
+			on: {
+				onAfterSelect(id) {
+					this.$scope.app.callEvent("onGroupClick", [id]);
+				}
+			}
 		};
 
 		const ui = {
@@ -39,7 +46,7 @@ export default class WordGroupView extends JetView {
 					datatable,
 					{}
 				]},
-				{$subview: true}
+				WordsListView
 			]
 		};
 
@@ -47,6 +54,9 @@ export default class WordGroupView extends JetView {
 		return ui;
 	}
 	init() {
-		$$("wordGroups:datatable").parse(wordGroups);
+		wordGroups.waitData.then(() => {
+			$$("wordGroups:datatable").parse(wordGroups);
+			$$("wordGroups:datatable").select(wordGroups.getFirstId());
+		});
 	}
 }

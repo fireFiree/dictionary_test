@@ -1,5 +1,5 @@
 import {JetView} from "webix-jet";
-//import {wordGroups} from "../models/wordGroups";
+import {wordGroups} from "../models/wordGroups";
 
 
 export default class WordsListView extends JetView {
@@ -16,7 +16,7 @@ export default class WordsListView extends JetView {
 
 		const clmns = [
 			{id: "word", header: ["Слово", {content: "textFilter"}], minWidth: 200, sort: "text", fillspace: 4},
-			{id: "partofSpeech", header: "Часть речи", sort: "text", minWidth: 100, fillspace: 2},
+			{id: "partOfSpeech", header: "Часть речи", sort: "text", minWidth: 100, fillspace: 2},
 			{id: "translation", header: ["Перевод", {content: "textFilter"}], minWidth: 200, sort: "text", fillspace: 4},
 			{id: "", template: "<span class='webix_icon fa-pencil-square-o'></span>", width: 40},
 			{id: "", template: "<span class='webix_icon fa-trash-o'></span>", width: 40}
@@ -29,7 +29,13 @@ export default class WordsListView extends JetView {
 			autoWidth: true,
 			rightSplit: 2,
 			minWidth: 650,
-			minHeight: 400
+			minHeight: 400,
+			name: "words",
+			onClick: {
+				"fa-trash-o": function (ev, id) {
+					this.remove(id.row);
+				}
+			}
 		};
 
 		const ui = {
@@ -43,12 +49,11 @@ export default class WordsListView extends JetView {
 
 		return ui;
 	}
-	init() {
-		let list = [
-			{id: 1, word: "kaa", translation: "la", partofSpeech: "noun"},
-			{id: 2, word: "kaa2", translation: "la43", partofSpeech: "verb"},
-			{id: 3, word: "kaa1", translation: "la4", partofSpeech: "noun"}
-		];
-		$$("wordsList:datatable").parse(list);
+	init(view) {
+		this.app.on("onGroupClick", (id) => {
+			view.queryView({name: "words"}).clearAll();
+			view.queryView({name: "words"}).parse(wordGroups.getItem(id).words);
+			//$$("wordGroups:datatable").refresh();
+		});
 	}
 }
