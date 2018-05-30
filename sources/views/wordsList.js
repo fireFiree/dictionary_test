@@ -52,8 +52,7 @@ export default class WordsListView extends JetView {
 	init(view) {
 		this.app.on("onGroupClick", (id) => {
 			view.queryView({name: "words"}).clearAll();
-			view.queryView({name: "words"}).parse(wordGroups.getItem(id).words);
-			//$$("wordGroups:datatable").refresh();
+			view.queryView({name: "words"}).parse(getWords(id));
 		});
 	}
 }

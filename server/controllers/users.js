@@ -1,21 +1,54 @@
 const User = require("../models/User");
 
-const router = require("express").Router();
+module.exports.getAll = (req, res) => {
+	User.find({}).exec((err, data) => {
+		if (err) {
+			res.status(500).send(err);
+		}
 
-router.get("/", (req, res) => {
-	res.send("lalala");
-});
+		res.status(200).send(data);
+	});
+};
 
-router.post("/", (req, res) => {
-	res.send("post");
-});
+module.exports.create = (req, res) => {
+	let user = new User({
+		name: req.params.name,
+		login: req.params.login,
+		password: req.params.password
+	});
+	user.save((err, data) => {
+		if (err) {
+			res.status(500).send(err);
+		}
+		res.status(200).send(data);
+	});
+};
 
-router.put("/", (req, res) => {
-	res.send("put");
-});
+module.exports.update = (req, res) => {
+	User.findById(req.params.id, (err, user) => {
+		if (err) {
+			res.status(500).send(err);
+		}
+		else {
+			user.name = user.body.name || user.name;
+			user.login = user.body.login || user.login;
+			user.password = user.body.password || user.password;
 
-router.delete("/", (req, res) => {
-	res.send("delete");
-});
+			user.save((err, user) => {
+				if (err) {
+					res.status(500).send(err);
+				}
+				res.status(200).send(user);
+			});
+		}
+	});
+};
 
-module.exports = router;
+module.exports.remove = (req, res) => {
+	User.findByIdAndRemove(req.params.id, (err, user) => {
+		if (err) {
+			res.status(500).send(err);
+		}
+		res.status(200).send(user);
+	});
+};

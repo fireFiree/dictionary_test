@@ -3,6 +3,6 @@
     "db":{
         "name": "dictionary",
         "host": "localhost",
-        "port": 21017
+        "port": 27017
     }
 }

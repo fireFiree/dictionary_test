@@ -36,7 +36,7 @@ export default class TopView extends JetView {
 						margin: 20,
 						borderless: true,
 						rows: [menu]},
-					{rows: [{height: 10},
+					{rows: [
 						{type: "clean",
 							css: "app-right-panel",
 							rows: [

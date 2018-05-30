@@ -1,11 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
-const serverPort = require("./etc/config.json").serverPort;
+const config = require("./etc/config.json");
 
-const userRouter = require("./routes/user");
+const routes = require("./routes");
 
 const app = express();
+
+mongoose.connect(`mongodb://${config.db.host}:${config.db.port}/usersdb`);
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "Connection error:"));
+db.once("open", () => { console.log("Mongoose connection is open"); });
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -17,9 +24,9 @@ app.all("/*", (req, res, next) => {
 	next();
 });
 
-app.use(userRouter);
+app.use(routes);
 
-app.listen(serverPort, () => {
+app.listen(config.serverPort, () => {
 	console.log("Server is running!");
 });
 
